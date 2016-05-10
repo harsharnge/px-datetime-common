@@ -4,12 +4,27 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>px-calendar Demo</title>
+        <title>px-calendar-picker Demo</title>
         <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
         <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
         <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
-        <link rel="import" href="px-calendar.html"/>
+        <link rel="import" href="px-calendar-picker.html"/>
         <link rel="import" href="../px-theme/px-theme.html"/>
+
+        <style>
+          .container {
+            float:left;
+            width:250px;
+            margin:20px;
+            resize: both;
+          }
+          .bigContainer {
+            float: left;
+            width:auto;
+            height:100%;
+          }
+        </style>
+
     </head>
 
     <body>
@@ -25,11 +40,59 @@
             Also see the <a href="index.html">documentation</a> and the <a href="test/fixture.html">UI test fixture</a>.
         </p>
 
-        <p>
-            Click on the counter to make it increment:
-        </p>
+      <div class="bigContainer">
+        <div class="container" >
+          <px-calendar-picker></px-calendar-picker>
+        </div>
+        <div class="container">
+          <h><strong>Choose a month range + allow-future-dates</strong></h>
+          <br>
+          <br>
+          <px-calendar-picker display-mode='month' allow-future-dates></px-calendar-picker>
+        </div>
+        <div class="container">
+          <h><strong>choose a year range + allow-future-dates</strong></h>
+          <br>
+          <br>
+          <px-calendar-picker display-mode='year' allow-future-dates></px-calendar-picker>
+        </div>
+      </div>
+      <div class="bigContainer">
+        <div class="container">
+          <h><strong>Choose a single day + allow-future-dates</strong></h>
+          <br>
+          <br>
+          <px-calendar-picker prevent-range-selection allow-future-dates></px-calendar-picker>
+        </div>
+        <div class="container">
+          <h><strong>Choose a single month + allow-future-dates + hide previous button</strong></h>
+          <br>
+          <br>
+          <px-calendar-picker prevent-range-selection display-mode='month' allow-future-dates hide-previous-button></px-calendar-picker>
+        </div>
+        <div class="container">
+          <h><strong>Choose a single year + allow-future-dates + hide next button</strong></h>
+          <br>
+          <br>
+          <px-calendar-picker id='test' prevent-range-selection display-mode='year' allow-future-dates hide-next-button></px-calendar-picker>
+        </div>
+      </div>
+      <div class="bigContainer">
+        <div class="container">
+          <h><strong>Block dates before 9 may 2016</strong></h>
+          <br>
+          <br>
+          <px-calendar-picker prevent-range-selection allow-future-dates block-dates-before='2016-05-09T19:25:57.966Z'></px-calendar-picker>
+        </div>
+        <div class="container">
+          <h><strong>Block dates after 9 may 2016</strong></h>
+          <br>
+          <br>
+          <px-calendar-picker prevent-range-selection allow-future-dates block-dates-after='2016-05-09T19:25:57.966Z'></px-calendar-picker>
+        </div>
+      </div>
+      <br>
+      <br>
 
-        <!-- instance 1, "predix" theme -->
-        <px-calendar counter-value="1">&hearts;</px-calendar>
     </body>
 </html>

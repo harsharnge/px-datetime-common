@@ -1,9 +1,11 @@
-Px-Calendar
+#THIS COMPONENT IS NOT YET RELEASED.
+
+Px-Calendar-picker
 -----------------------------------------------
 
 ## Overview
 
-Px-Calendar is a Predix Experience ('Px') component
+A calendar for picking dates; NOT a display calendar :)
 
 ## Getting Started
 
