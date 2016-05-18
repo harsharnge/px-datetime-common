@@ -33,7 +33,7 @@
     "tag": "v0.1.1",
     "commit": "88921ed899f146a73bab5a5d7f500bdf37e6c231"
   },
-  "_source": "https://github.com/mdwragg/polymer-fontawesome.git",
+  "_source": "git://github.com/mdwragg/polymer-font-awesome.git",
   "_target": "~0.1.0",
-  "_originalSource": "polymer-font-awesome"
+  "_originalSource": "mdwragg/polymer-font-awesome"
 }

@@ -1,6 +1,6 @@
 {
   "name": "px-datetime-common",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "main": [
     "px-datetime-common.html"
   ],
@@ -30,5 +30,8 @@
     "px-forms-design": "~0.3.0",
     "px-list-bare-design": "~0.2.0",
     "px-tables-design": "~0.3.0"
+  },
+  "resolutions": {
+    "px-datetime-common": "^0.1.0"
   }
 }
