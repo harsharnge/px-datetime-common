@@ -1,6 +1,6 @@
 {
   "name": "px-viewport-design",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "authors": [
     "General Electric"
   ],
@@ -19,16 +19,17 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "OSS_Notice.pdf"
   ],
   "dependencies": {
     "inuit-responsive-tools": "~0.1.3"
   },
-  "_release": "0.4.5",
+  "_release": "0.4.6",
   "_resolution": {
     "type": "version",
-    "tag": "v0.4.5",
-    "commit": "344e8ac0e20a8ab04ecf23e32e39bc90a918b1c4"
+    "tag": "v0.4.6",
+    "commit": "ec72c397e5fe03fff4b954f85f46958ef0845554"
   },
   "_source": "https://github.com/PredixDev/px-viewport-design.git",
   "_target": "~0.4.1",
