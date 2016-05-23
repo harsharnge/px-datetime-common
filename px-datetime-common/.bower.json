@@ -1,6 +1,6 @@
 {
   "name": "px-datetime-common",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": [
     "px-datetime-common.html"
   ],
@@ -19,9 +19,8 @@
     "polymer": "~1.4.0",
     "px-theme": "~0.7.0",
     "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#~1.1.0",
-    "px-calendar": "https://github.com/PredixDev/px-calendar.git",
     "polymer-font-awesome": "~0.1.0",
-    "px-dropdown": "~0.9.0"
+    "px-dropdown": "~0.9.7"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#~v1.1.0",
@@ -32,14 +31,14 @@
     "px-tables-design": "~0.3.0"
   },
   "homepage": "https://github.com/PredixDev/px-datetime-common",
-  "_release": "0.1.0",
+  "_release": "0.2.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.1.0",
-    "commit": "d331eaf159f9d87ddbffbda75eb846fb2dc476b7"
+    "tag": "v0.2.0",
+    "commit": "f5d818e585ec930be650948f636a1e82b6cd354b"
   },
   "_source": "https://github.com/PredixDev/px-datetime-common.git",
-  "_target": "^0.1.0",
+  "_target": "^0.2.0",
   "_originalSource": "px-datetime-common",
   "_direct": true
 }

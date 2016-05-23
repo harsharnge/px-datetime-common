@@ -86,7 +86,7 @@ Datetime input element. Includes iron-ally-keys-behavior to limit keystrokes to 
       dtWorkingCopy:{
         type:String,
         notify: true,
-        observer: '_sizeInputs'
+        observer: '_dataChanged'
       },
       /**
        *
@@ -118,14 +118,19 @@ Datetime input element. Includes iron-ally-keys-behavior to limit keystrokes to 
         type:Number,
         reflectToAttribute:true
       },
-      timeZone:{
-        type:String,
-        value: ''
+      /**
+       *  Whether the cell is currently selected. readonly
+       */
+      isSelected: {
+        type: Boolean,
+        readOnly: true,
+        notify: true,
+        value: false
       }
     },
 
     observers:[
-      '_updateAndValidateWorkingCopy(momentObj)'
+      '_updateAndValidateWorkingCopy(momentObj, timeZone)'
     ],
 
     /**
@@ -161,6 +166,17 @@ Datetime input element. Includes iron-ally-keys-behavior to limit keystrokes to 
         classList += "text-input--non-editable ";
       }
       return classList;
+    },
+    /**
+     *  Caleld every time the data of the cell changed
+     */
+    _dataChanged: function() {
+      this._sizeInputs();
+
+      //only try to validate if the cell is full
+      if(this.cellLength === this.$.dtEntry.value.length) {
+        this._inputValueChanged();
+      }
     },
     /**
      * Size the input fields based on the number of characters in dtWorkingCopy
@@ -217,11 +233,14 @@ Datetime input element. Includes iron-ally-keys-behavior to limit keystrokes to 
      * @method _handleFocus
      */
     _handleFocus: function(evt) {
-      var ne = Polymer.dom(evt);
+
       if(this.momentFormat !== 'Z' && this.momentFormat !== 'ZZ') {
-        this.toggleClass("is-selected", true, ne.rootTarget);
+
+        this.toggleClass("is-selected", true, this.$.dtEntry);
         this.removeOwnKeyBindings();
         this._addGeneralKeyBindings();
+        //special setter cause readonly
+        this._setIsSelected(true);
       }
       else {
         this.removeOwnKeyBindings();
@@ -285,6 +304,8 @@ Datetime input element. Includes iron-ally-keys-behavior to limit keystrokes to 
 
       this.toggleClass("is-selected", false, ne.rootTarget);
       this.fire('px-cell-blured');
+      //special setter cause readonly
+      this._setIsSelected(false);
     },
     /**
      * Listner attached to the input and sets up a timeout to trigger validation.
@@ -295,7 +316,7 @@ Datetime input element. Includes iron-ally-keys-behavior to limit keystrokes to 
       var _this = this;
       this.debounce('cell-validation', function(){
         _this.fire('px-cell-validate');
-      }, 500);
+      }, 100);
     },
     /**
      * When ENTER is clicked
@@ -303,6 +324,7 @@ Datetime input element. Includes iron-ally-keys-behavior to limit keystrokes to 
      * @method _onEnter
      */
     _onEnter:function(){
+      this._checkValue();
       this.fire('px-cell-validate');
       setTimeout(function(){
         if(this.isSubmitButtonValid){

@@ -24,6 +24,7 @@
     </p>
     <h2> DATE </h2>
     <div>
+      
       <div>UTC timezone, basic timezone dropdown. Format: YYYY/MM/DD Z</div>
       <px-datetime-entry
         id="dateEntry"
@@ -109,6 +110,16 @@
         >
       </px-datetime-entry>
     </div>
+    <div>
+      <px-datetime-entry
+        id="timeEntry3"
+        date-or-time = 'Time'
+        moment-format = "hh:mm:ss.SSS A"
+        show-time-zone= "text"
+        time-zone="UTC"
+        >
+      </px-datetime-entry>
+    </div>
 
 
     <script type="text/javascript">
@@ -125,6 +136,7 @@
         Polymer.dom(document).querySelector('#dateEntry5').momentObj = obj;
         Polymer.dom(document).querySelector('#dateEntry6').momentObj = obj.clone().add(1, 'years');
         Polymer.dom(document).querySelector('#timeEntry2').momentObj = obj.clone().subtract(1, 'hours');
+        Polymer.dom(document).querySelector('#timeEntry3').momentObj = obj;
       });
 
     </script>

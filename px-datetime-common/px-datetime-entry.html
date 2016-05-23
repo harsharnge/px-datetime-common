@@ -25,8 +25,8 @@ Range field component which displays a time or date and font awesome icon.
   <link rel="import" type="css" href="css/px-datetime-entry.css"/>
   <template>
     <div id='wrapper' class="wrapper">
-      <div class="inline-block">
-          <label class="label--inline">
+      <div class$="{{_getWrapperClass(showTimeZone)}}">
+          <label class="label--inline" on-tap="_iconClicked">
               <span class="a11y dtLabel">{{dateOrTime}}</span>
               <iron-icon
                 id="icon"
@@ -43,7 +43,8 @@ Range field component which displays a time or date and font awesome icon.
               moment-format='[[item]]'
               symbol=[[_returnSymbol(index)]]
               is-valid$={{isValid}}
-              time-zone="[[timeZone]]">
+              time-zone="[[timeZone]]"
+              is-selected={{isSelected}}>
             </px-datetime-entry-cell>
             <template is="dom-if" if={{_isSymbol(index)}}>
               <span
@@ -53,7 +54,7 @@ Range field component which displays a time or date and font awesome icon.
             </template>
           </template>
       </div>
-      <div class="inline-block">
+      <div >  <!-- class="inline-block" -->
         <template is="dom-if" if="{{_showTimeZoneDropdown(showTimeZone)}}">
           <px-dropdown id="dropdown" display-value="[[timeZone]]" value="{{timeZone}}">
             <px-dropdown-content
@@ -65,7 +66,7 @@ Range field component which displays a time or date and font awesome icon.
           </px-dropdown>
         </template>
         <template is="dom-if" if="{{_showTimeZoneText(showTimeZone)}}">
-          <span class="u-ml-- u-mr--">{{_getTimeZoneText(timeZone, showTimeZone, momentObj)}}</span>
+          <span class="text-input--non-editable u-ml-- u-mr--">{{_getTimeZoneText(timeZone, showTimeZone, momentObj)}}</span>
         </template>
       </div>
       <template is="dom-if" if="{{!isValid}}">
@@ -155,31 +156,26 @@ Range field component which displays a time or date and font awesome icon.
       },
       /**
        *
-       * Moment-timezone string for using a specific timezone. See
-       * http://momentjs.com/timezone/docs/#/data-loading/getting-zone-names/
-       *
-       * if not provided tries to guess the current local
-       */
-      timeZone: {
-        type: String,
-        value: function() {
-          return moment.tz.guess();
-        },
-        observer: '_timeZoneChanged'
-      },
-      /**
-       *
-       * Can be set to show the timezone. Can have 2 values:
-       *  'dropdown': shows the time zone as a dropdown which the user can use to
+       * Can be set to show the timezone.
+       * - 'dropdown': shows the time zone as a dropdown which the user can use to
        * select a different time zone. Only contains a subset of all timezones
-       *  'extendedDropdown': shows the time zone as a dropdown which the user can use to
+       * - 'extendedDropdown': shows the time zone as a dropdown which the user can use to
        * select a different time zone. Contains all existing timezones (588)
-       *  'text': shows the time zone as text, non editable
-       *  'abbreviatedText': shows the time zone as an abbreviated text, non editable (such as PST, EST...)
+       *
+       * - 'text': shows the time zone as text, non editable
+       * - 'abbreviatedText': shows the time zone as an abbreviated text, non editable (such as PST, EST...)
        */
       showTimeZone: {
         type: String,
         value: ''
+      },
+      /**
+       *  True if any cell is currently selected.
+       *
+       */
+      isSelected: {
+        type: Boolean,
+        notify: true
       }
     },
 
@@ -272,15 +268,11 @@ Range field component which displays a time or date and font awesome icon.
     },
     /**
      *
-     *
-     *
      */
     _handleBlur: function(){
       this._validateInput();
     },
     /**
-     *
-     *
      *
      */
     _handleMoment: function(evt){
@@ -288,35 +280,17 @@ Range field component which displays a time or date and font awesome icon.
     },
     /**
      *
-     *
-     *
-     */
-    _timeZoneChanged: function() {
-      if(this.momentObj) {
-        var newMom = this.momentObj.clone().tz(this.timeZone);
-        this.set('momentObj', newMom);
-        //this.notifyPath('momentObj', this.momentObj);
-      }
-    },
-    /**
-     *
-     *
-     *
      */
     _showTimeZoneText: function(showTimeZone) {
       return showTimeZone === "text" || showTimeZone === "abbreviatedText";
     },
     /**
      *
-     *
-     *
      */
     _showTimeZoneDropdown: function(showTimeZone) {
       return showTimeZone === "dropdown" || showTimeZone === "extendedDropdown";
     },
     /**
-     *
-     *
      *
      */
     _getTimeZoneList: function(showTimeZone) {
@@ -409,17 +383,30 @@ Range field component which displays a time or date and font awesome icon.
      *
      */
     _getValidationIconClass: function(isValid){
-        var classList= ['validation-container__icon'];
+      var classList= ['validation-container__icon'];
 
-        if(!isValid) {
-          classList.push('validation-container__icon--failed');
-        }
-        else {
+      if(!isValid) {
+        classList.push('validation-container__icon--failed');
+      }
+      else {
 
-            classList.push('visuallyhidden');
+          classList.push('visuallyhidden');
 
-        }
-        return classList.join(' ');
-      },
+      }
+      return classList.join(' ');
+    },
+    _getWrapperClass: function(showTimeZone) {
+      var classList = "";
+
+      if(!showTimeZone) {
+        classList += "u-mr-- ";
+      }
+
+      return classList;
+    },
+    _iconClicked: function(evt) {
+
+      this.fire('px-datetime-entry-icon-clicked');
+    }
   });
 </script>

@@ -260,7 +260,7 @@ The first range date may be before, after, or equal to the second range date, de
     _getTableClass: function(shrink) {
       var base = "table table--no-cells text--center ";
 
-      if(shrink) {
+      if(!shrink) {
         base += "constantsize "
       }
       return base;
