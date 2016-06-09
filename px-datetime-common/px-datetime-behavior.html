@@ -1,4 +1,5 @@
 <link rel="import" href="px-datetime-imports.html" />
+<link rel="import" href="px-datetime-shared-behavior.html" />
 
 <script>
 
@@ -12,21 +13,9 @@
   @polymerBehavior pxDatetimeBehavior
 */
 
-var pxDatetimeBehavior = {
+var pxDatetimeBehavior = [{
 
   properties: {
-    /**
-     *
-     * Set this attribute when you do want to allow future dates in the 'px-date-panel' component.
-     *
-     * Defined In: 'pxDatetimeBehavior'
-     *
-     * @default false (future dates will be disabled and unclickable)
-     */
-    blockFutureDates: {
-      type: Boolean,
-      value: false
-    },
     /**
      * Moment value with the date or time to display.  Will be parsed according to the moment format.  (see momentFormat property)
      * Default to now.
@@ -43,37 +32,27 @@ var pxDatetimeBehavior = {
     },
     /**
      *
-     * Moment-timezone string for using a specific timezone. See
-     * http://momentjs.com/timezone/docs/#/data-loading/getting-zone-names/
+     * This is the string you use to interact with px-datetime components. it holds
+     * a date and time representing the value in the related component
      *
-     * if not provided tries to guess the current local
+     * Format ISO8601 strings
+     * ```
+     * "2013-01-07T22:44:30.652Z"
+     * ```
+     *
+     * This will be changed when the user Submits their new date/time.
+     *
      */
-    timeZone: {
+    dateTime: {
       type: String,
       notify: true,
       value: function() {
-        return moment.tz.guess();
+        return moment().toISOString();
       },
-      observer: '_timeZoneChanged'
+      observer: '_notifyDateTimeChanged'
     }
-
   }, //properties close bracket
 
-  /**
-   * Takes an ISO 8601 String and returns a moment object
-   *
-   * Defined In: 'pxDatetimeBehavior'
-   *
-   * @param {String} timeString
-   */
-  _convertISOtoMoment: function(timeString) {
-    if(this.isUtc) {
-      return moment.utc(timeString, moment.ISO_8601);
-    }
-    else {
-      return moment(timeString, moment.ISO_8601);
-    }
-  },
   /**
    * makes sure the moment object reflexts the timezone
    */
@@ -82,10 +61,45 @@ var pxDatetimeBehavior = {
       var newMom = this.momentObj.clone().tz(this.timeZone);
       this.set('momentObj', newMom);
     }
+  },
+  /**
+   * px-datetime-submitted event. This event is fired differently depending on config:
+   *  - If the px-datetim component has an apply button then it is fired when the
+   *    user clicks the apply button (or press enter) AND the date/time is valid
+   *  - If the px-datetim component does not have an apply button then it is fired
+   *    every time a change is made to the date/time AND the date/time is valid
+   *
+   * @event px-datetime-submitted
+   *
+   * @param {string} dateTime - the ISO 8601 String representing the date/time chosen by the user
+   * @param {object} momentObj - the moment.js object representing the date/time chosen by the user
+   */
+  _notifyDateTimeChanged: function(dateTime) {
+
+    //make sure we keep the moment synchronized in case moment has been changed externally
+    if(!this.momentObj || this.momentObj.toISOString() !== this.dateTime) {
+      this.set('momentObj', this._convertISOtoMoment(this.dateTime));
+    }
+
+    this.fire('px-datetime-submitted', {dateTime: this.dateTime, momentObj: this.momentObj});
+  },
+  /**
+   * Applies the current moment object to the external facing datetime string
+   **/
+  _applyMomentToString: function() {
+    if(this.dateTime !== this.momentObj.toISOString()) {
+      this.set('dateTime', this.momentObj.toISOString());
+    }
+  },
+  /**
+   * Rollbacks the current moment object to the external facing datetime string
+   **/
+  _rollbackMomentFromString: function() {
+    //only rollback if actually necessary
+    if(this.momentObj.toISOString() !== this.dateTime) {
+      this.set('momentObj', this._convertISOtoMoment(this.dateTime));
+    }
   }
-
-}; //pxDatetimeBehavior close bracket
-
-
+}, pxDatetimeSharedBehavior];
 
 </script>

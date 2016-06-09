@@ -24,37 +24,39 @@ Range field component which displays a time or date and font awesome icon.
 <dom-module id="px-datetime-entry">
   <link rel="import" type="css" href="css/px-datetime-entry.css"/>
   <template>
-    <div id='wrapper' class="wrapper">
-      <div class$="{{_getWrapperClass(showTimeZone)}}">
-          <label class="label--inline" on-tap="_iconClicked">
+    <div id='wrapper' class="inline--flex">
+      <div class="inline--flex">
+          <label class="label--inline dt-label-icon" on-tap="_iconClicked">
               <span class="a11y dtLabel">{{dateOrTime}}</span>
-              <iron-icon
-                id="icon"
-                class="fa fa-fw dtIcon"
-                icon="[[_setIcon(dateOrTime)]]">
-              </iron-icon>
+              <template is="dom-if" if={{!hideIcon}}>
+                <iron-icon
+                  id="icon"
+                  class="fa fa-fw dtIcon"
+                  icon="[[_setIcon(dateOrTime)]]">
+                </iron-icon>
+              </template>
           </label>
           <template is="dom-repeat" items="{{_cellFormatArray}}">
             <px-datetime-entry-cell
               id="cell{{index}}"
-              class="cell"
+              class="cell "
               order='{{index}}'
               moment-obj="[[momentObj]]"
               moment-format='[[item]]'
-              symbol=[[_returnSymbol(index)]]
+              symbol=[[_returnSymbol(index,_symbolCharArray)]]
               is-valid$={{isValid}}
               time-zone="[[timeZone]]"
               is-selected={{isSelected}}>
             </px-datetime-entry-cell>
-            <template is="dom-if" if={{_isSymbol(index)}}>
-              <span
+            <template is="dom-if" if={{_isSymbol(index,_symbolCharArray)}}>
+              <div
                 class="dtEntrySymbol"
-                symbol='{{_returnSymbol(index)}}'>{{_returnSymbol(index)}}
-              </span>
+                symbol='{{_returnSymbol(index,_symbolCharArray)}}'>{{_returnSymbol(index,_symbolCharArray)}}
+              </div>
             </template>
           </template>
       </div>
-      <div >  <!-- class="inline-block" -->
+      <div class$="{{_getTimeZoneTextClass(showTimeZone, isValid)}}">
         <template is="dom-if" if="{{_showTimeZoneDropdown(showTimeZone)}}">
           <px-dropdown id="dropdown" display-value="[[timeZone]]" value="{{timeZone}}">
             <px-dropdown-content
@@ -66,7 +68,7 @@ Range field component which displays a time or date and font awesome icon.
           </px-dropdown>
         </template>
         <template is="dom-if" if="{{_showTimeZoneText(showTimeZone)}}">
-          <span class="text-input--non-editable u-ml-- u-mr--">{{_getTimeZoneText(timeZone, showTimeZone, momentObj)}}</span>
+          <span class="text-input--non-editable">{{_getTimeZoneText(timeZone, showTimeZone, momentObj)}}</span>
         </template>
       </div>
       <template is="dom-if" if="{{!isValid}}">
@@ -115,14 +117,20 @@ Range field component which displays a time or date and font awesome icon.
       },
       /**
        *
-       * Moment format string for the format to display/validate this field against (see http://momentjs.com/docs/#/parsing/string-format/)
-       *
-       * Can only be configured statically; not data-bindable
-       *
-       *
+       * Moment format string for the format to display/validate this field against
+       * (see http://momentjs.com/docs/#/parsing/string-format/)
        */
       momentFormat: {
-        type: String
+        type: String,
+        observer: '_formatChanged'
+      },
+      /**
+       * Whether to hide the calendar or clock icon
+       *
+       */
+      hideIcon: {
+        type: Boolean,
+        value: false
       },
       /**
        *
@@ -195,6 +203,29 @@ Range field component which displays a time or date and font awesome icon.
     ready: function(){
 
       this._splitFormat();
+      this._sizeSymbols();
+    },
+    _formatChanged: function() {
+      this._splitFormat();
+      this._sizeSymbols();
+    },
+    _sizeSymbols: function() {
+      //create a dummy canvas to measure string and make size the input correctly
+      var style = window.getComputedStyle(this, null),
+          fontSize = style.getPropertyValue('font-size'),
+          fontFamily = style.getPropertyValue('font-family'),
+          c = document.createElement('canvas'),
+          ctx=c.getContext('2d'),
+          symbols = Polymer.dom(this.root).querySelectorAll('.dtEntrySymbol'),
+          length;
+
+      ctx.font = fontSize + " " + fontFamily;
+
+      symbols.forEach(function(symbol, index) {
+
+        length = ctx.measureText(symbol.innerHTML.trim()).width;
+        symbol.style['width'] = length + 'px';
+      });
     },
     /**
      *
@@ -256,15 +287,20 @@ Range field component which displays a time or date and font awesome icon.
 
       if(entryCellOrder === this._cellFormatArray.length - 1 && evt.detail.dir === 1){
 
-        this.fire('px-next-field');
+        this.fire('px-next-field', {dateOrTime: this.dateOrTime});
       } else if(entryCellOrder === 0 && evt.detail.dir === -1){
 
-        this.fire('px-previous-field');
+        this.fire('px-previous-field', {dateOrTime: this.dateOrTime});
       } else {
-        entryCellOrder = parseInt(entryCellOrder) + evt.detail.dir;
-        var elem = this.$$("#cell" + entryCellOrder);
-        elem.$.dtEntry.focus();
+        this._focusCell(parseInt(entryCellOrder) + evt.detail.dir);
       }
+    },
+    _focusCell: function(cellNumber) {
+      var elem = this.$$("#cell" + cellNumber);
+      elem.$.dtEntry.focus();
+    },
+    _focusLastCell: function() {
+      this._focusCell(this._cellFormatArray.length - 1);
     },
     /**
      *
@@ -377,6 +413,20 @@ Range field component which displays a time or date and font awesome icon.
         return timeZone;
       }
     },
+    _getTimeZoneTextClass: function (showTimeZone, isValid) {
+      var classList = "";
+      if (showTimeZone) {
+        classList += "u-ml-- ";
+      }
+      if(showTimeZone === "dropdown" || showTimeZone === "extendedDropdown") {
+        classList += "align-dropdown ";
+      }
+      if (!isValid) {
+        classList += "u-mr-- ";
+      }
+
+      return classList;
+    },
     /**
      *
      *
@@ -389,24 +439,20 @@ Range field component which displays a time or date and font awesome icon.
         classList.push('validation-container__icon--failed');
       }
       else {
-
           classList.push('visuallyhidden');
-
       }
       return classList.join(' ');
     },
-    _getWrapperClass: function(showTimeZone) {
-      var classList = "";
-
-      if(!showTimeZone) {
-        classList += "u-mr-- ";
-      }
-
-      return classList;
-    },
+    /**
+     * px-datetime-entry-icon-clicked event. This event is fired when the calendar
+     * or clock icon has been clicked
+     *
+     * @event px-datetime-entry-icon-clicked
+     * @param {string} dateOrTime - Whetehr the date or time icon has been clicked. Values can be "Date" or "Time"
+     */
     _iconClicked: function(evt) {
 
-      this.fire('px-datetime-entry-icon-clicked');
+      this.fire('px-datetime-entry-icon-clicked', {dateOrTime: this.dateOrTime});
     }
   });
 </script>
