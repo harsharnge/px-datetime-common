@@ -1,6 +1,6 @@
 {
   "name": "px-calendar-picker",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": [
     "px-calendar-picker.html"
   ],
@@ -14,10 +14,9 @@
     "test"
   ],
   "dependencies": {
-    "moment": "~2.10.6",
-    "polymer": "~1.4.0",
-    "px-theme": "https://github.com/PredixDev/px-theme.git#~0.7.0",
-    "px-datetime-common": "https://github.com/PredixDev/px-datetime-common.git#~0.2.0",
+    "polymer": "^1.5.0",
+    "px-theme": "~0.7.0",
+    "px-datetime-common": "~0.3.0",
     "polymer-font-awesome": "polymer-font-awesome#~v0.1.0"
   },
   "devDependencies": {
@@ -26,12 +25,15 @@
     "px-tables-design": "https://github.com/PredixDev/px-tables-design.git#~0.3.0",
     "px-starter-kit-design": "https://github.com/PredixDev/px-starter-kit-design.git#~0.4.9"
   },
+  "resolutions": {
+    "polymer": "^1.5.0"
+  },
   "homepage": "https://github.com/PredixDev/px-calendar",
-  "_release": "0.1.5",
+  "_release": "0.1.6",
   "_resolution": {
     "type": "version",
-    "tag": "v0.1.5",
-    "commit": "575148105bd4716e2f1f6d1d128808136a38d337"
+    "tag": "0.1.6",
+    "commit": "57333def493b33b7b2c1cf342e55cbd3ad617af1"
   },
   "_source": "https://github.com/PredixDev/px-calendar.git",
   "_target": "*",
