@@ -41,6 +41,6 @@
     "commit": "58783dc5d15c65a58153e0d5538ed963cc9ca5e6"
   },
   "_source": "https://github.com/PredixDev/px-datetime-common.git",
-  "_target": "^0.3.1",
+  "_target": "~0.3.0",
   "_originalSource": "px-datetime-common"
 }
