@@ -1,6 +1,6 @@
 {
   "name": "px-datetime-common",
-  "version": "0.4.0",
+  "version": "0.4.2",
   "main": [
     "px-datetime-common.html"
   ],
@@ -34,13 +34,13 @@
     "polymer": "^1.5.0"
   },
   "homepage": "https://github.com/PredixDev/px-datetime-common",
-  "_release": "0.4.0",
+  "_release": "0.4.2",
   "_resolution": {
     "type": "version",
-    "tag": "v0.4.0",
-    "commit": "161f0ab5c645388cee357fc901773ec7e2de243f"
+    "tag": "v0.4.2",
+    "commit": "f5126c6df76a468275ab07ea4a47341d9e2640c4"
   },
   "_source": "https://github.com/PredixDev/px-datetime-common.git",
-  "_target": "^0.4.0",
+  "_target": "~0.4.0",
   "_originalSource": "px-datetime-common"
 }

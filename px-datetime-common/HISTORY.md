@@ -1,3 +1,11 @@
+v0.4.1
+==================
+* added polymer behavior declaration
+
+v0.4.1
+==================
+* add auto generation of gh pages
+
 v0.4.0
 ==================
 * Upgrade to Polymer 1.5.0
