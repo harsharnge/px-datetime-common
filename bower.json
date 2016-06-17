@@ -31,10 +31,6 @@
     "px-tables-design": "~0.3.0"
   },
   "resolutions": {
-    "polymer": "^1.5.0",
-    "px-tooltip": "~0.7.0",
-    "px-theme": "~0.8.0",
-    "px-dropdown": "~0.10.0",
-    "px-datetime-common": "^0.4.0"
+    "polymer": "^1.5.0"
   }
 }
